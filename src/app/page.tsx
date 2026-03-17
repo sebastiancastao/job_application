@@ -1,65 +1,109 @@
-import Image from "next/image";
+import { supabaseAdmin } from '@/lib/supabase'
 
-export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+type JobApplication = {
+  id: number
+  first_name: string
+  last_name: string
+  phone: string
+  email: string
+  zip_code: string
+  position: string
+  start_date: string
+  employment_type: string
+  experience: string
+  drivers_license: string
+  background_check: string
+  bio: string
+  consent: boolean
+  submitted_at: string
+}
+
+export default async function Home() {
+  const { data, error } = await supabaseAdmin
+    .from('job_applications')
+    .select('*')
+    .order('submitted_at', { ascending: false })
+
+  if (error) {
+    return (
+      <main className="min-h-screen bg-zinc-100 p-8">
+        <p className="text-red-500">Error loading applications: {error.message}</p>
       </main>
+    )
+  }
+
+  const applications: JobApplication[] = data ?? []
+
+  return (
+    <main className="min-h-screen bg-zinc-100 px-6 py-10">
+      <h1 className="mb-8 text-3xl font-bold text-zinc-800">
+        Job Applications{' '}
+        <span className="ml-2 text-lg font-normal text-zinc-500">
+          ({applications.length})
+        </span>
+      </h1>
+
+      {applications.length === 0 ? (
+        <p className="text-zinc-500">No applications yet.</p>
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {applications.map((app) => (
+            <div
+              key={app.id}
+              className="flex flex-col gap-3 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-zinc-200"
+            >
+              {/* Header */}
+              <div className="flex items-start justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-zinc-800">
+                    {app.first_name} {app.last_name}
+                  </h2>
+                  <p className="text-sm text-zinc-500">{app.position}</p>
+                </div>
+                <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                  {app.employment_type}
+                </span>
+              </div>
+
+              {/* Contact */}
+              <div className="space-y-1 text-sm text-zinc-600">
+                <p>{app.email}</p>
+                <p>{app.phone}</p>
+                <p>ZIP: {app.zip_code}</p>
+              </div>
+
+              {/* Details */}
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <Detail label="Start date" value={app.start_date} />
+                <Detail label="Experience" value={app.experience} />
+                <Detail label="Driver's license" value={app.drivers_license} />
+                <Detail label="Background check" value={app.background_check} />
+              </div>
+
+              {/* Bio */}
+              {app.bio && (
+                <p className="line-clamp-3 rounded-lg bg-zinc-50 px-3 py-2 text-sm italic text-zinc-600">
+                  "{app.bio}"
+                </p>
+              )}
+
+              {/* Footer */}
+              <p className="mt-auto text-xs text-zinc-400">
+                Submitted {new Date(app.submitted_at).toLocaleDateString()}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </main>
+  )
+}
+
+function Detail({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md bg-zinc-50 px-2 py-1">
+      <p className="text-zinc-400">{label}</p>
+      <p className="font-medium text-zinc-700">{value}</p>
     </div>
-  );
+  )
 }
