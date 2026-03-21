@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Join Our Team | Atlanta's Furniture Taxi</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --yellow: #f5c000;
+    --yellow-dark: #d4a500;
+    --black: #111111;
+    --white: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Montserrat', sans-serif; margin: 0; padding: 0; }
+
+  .hero { position: relative; min-height: 100vh; display: flex; align-items: stretch; overflow: hidden; }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(105deg, rgba(6,6,6,0.93) 0%, rgba(6,6,6,0.78) 45%, rgba(6,6,6,0.62) 100%),
+      url('https://images.unsplash.com/photo-1600518464441-9154a4dea21b?w=1800&q=85') center/cover no-repeat;
+  }
+  .hero-inner {
+    position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; padding: 72px 48px; gap: 64px; align-items: start;
+  }
+
+  .hero-left h1 { font-size: clamp(26px,3.2vw,42px); font-weight: 800; color: var(--yellow); line-height: 1.2; margin-bottom: 20px; }
+  .hero-left .body-italic { font-size: 14px; font-style: italic; color: var(--white); line-height: 1.9; margin-bottom: 16px; font-weight: 400; }
+  .hero-left .body-bold { font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 28px; }
+  .btn-yellow {
+    display: inline-flex; align-items: center; gap: 8px; background: var(--yellow); color: var(--black);
+    border: none; padding: 13px 26px; font-family: 'Montserrat', sans-serif; font-size: 12px;
+    font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
+  }
+  .btn-yellow:hover { background: var(--yellow-dark); transform: translateY(-1px); }
+
+  .hero-right h2 { font-size: clamp(20px,2.5vw,34px); font-weight: 900; color: var(--white); line-height: 1.1; text-transform: uppercase; margin-bottom: 20px; }
+  .hero-phone {
+    display: inline-flex; align-items: center; gap: 9px; background: var(--yellow); color: var(--black);
+    padding: 13px 26px; font-size: 16px; font-weight: 800; text-decoration: none; margin-bottom: 22px;
+    transition: background 0.2s; white-space: nowrap;
+  }
+  .hero-phone:hover { background: var(--yellow-dark); }
+  .hero-phone svg { width: 16px; height: 16px; fill: currentColor; }
+  .req-note { font-size: 11px; color: rgba(255,255,255,0.6); font-style: italic; margin-bottom: 14px; }
+
+  .form-glass {
+    background: rgba(255,255,255,0.10); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.18); padding: 28px 26px;
+  }
+  .form-glass h3 { font-size: 16px; font-weight: 900; color: var(--white); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 2px solid var(--yellow); }
+
+  .frow { display: grid; gap: 0 18px; }
+  .frow.c3 { grid-template-columns: 1fr 1fr 1fr; }
+  .frow.c2 { grid-template-columns: 1fr 1fr; }
+  .frow.c1 { grid-template-columns: 1fr; }
+
+  .fld { display: flex; flex-direction: column; padding-bottom: 16px; }
+  .fld label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 5px; }
+  .fld label .req { color: var(--yellow); }
+  .fld input, .fld select, .fld textarea {
+    background: transparent; border: none; border-bottom: 2px solid var(--yellow); color: var(--white);
+    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 500; padding: 7px 0;
+    outline: none; width: 100%; transition: border-color 0.2s; border-radius: 0;
+    appearance: none; -webkit-appearance: none;
+  }
+  .fld input::placeholder, .fld textarea::placeholder { color: rgba(255,255,255,0.35); font-size: 12px; }
+  .fld input:focus, .fld select:focus, .fld textarea:focus { border-bottom-color: var(--white); }
+  .fld.error input, .fld.error select, .fld.error textarea { border-bottom-color: #ff4d4d; }
+  .fld.error label { color: #ff9999; }
+  .fld select option { background: #1a1a1a; color: var(--white); }
+  .fld select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23f5c000'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 2px center; padding-right: 18px; cursor: pointer;
+  }
+  .fld textarea { resize: none; min-height: 70px; line-height: 1.5; }
+
+  .fsep { grid-column: 1 / -1; font-size: 9px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--yellow); padding: 12px 0 4px; border-top: 1px solid rgba(255,255,255,0.12); margin-top: 4px; }
+
+  .opts { display: flex; gap: 16px; flex-wrap: wrap; padding: 5px 0; }
+  .opt { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--white); cursor: pointer; font-weight: 500; }
+  .opt input[type="radio"], .opt input[type="checkbox"] {
+    width: 15px; height: 15px; appearance: none; -webkit-appearance: none; border: 2px solid var(--yellow);
+    cursor: pointer; position: relative; flex-shrink: 0; padding: 0; background: transparent; border-radius: 0;
+  }
+  .opt input[type="radio"] { border-radius: 50%; }
+  .opt input[type="radio"]:checked::after { content: ''; position: absolute; top: 2px; left: 2px; width: 7px; height: 7px; border-radius: 50%; background: var(--yellow); }
+  .opt input[type="checkbox"]:checked { background: var(--yellow); }
+  .opt input[type="checkbox"]:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: var(--black); font-size: 10px; font-weight: 900; }
+
+  .form-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 10px; flex-wrap: wrap; }
+  .btn-submit, .btn-secondary {
+    background: var(--yellow); color: var(--black); border: none; padding: 14px 40px;
+    font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.12em;
+    text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-submit:hover:not(:disabled), .btn-secondary:hover:not(:disabled) { background: var(--yellow-dark); transform: translateY(-1px); }
+  .btn-submit:disabled, .btn-secondary:disabled { opacity: 0.65; cursor: not-allowed; transform: none; }
+  .form-note-small { font-size: 10px; color: rgba(255,255,255,0.45); font-style: italic; }
+
+  .success-panel { display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 24px; gap: 16px; }
+  .success-panel.visible { display: flex; }
+  .hidden { display: none !important; }
+  .success-icon { width: 64px; height: 64px; border-radius: 50%; background: var(--yellow); display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--black); font-weight: 900; }
+  .success-panel h4 { font-size: 20px; font-weight: 900; color: var(--white); text-transform: uppercase; letter-spacing: 0.06em; }
+  .success-panel p { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.7; max-width: 340px; }
+
+  .error-banner { display: none; background: rgba(255,77,77,0.18); border: 1px solid rgba(255,77,77,0.5); color: #ffaaaa; font-size: 11px; font-weight: 600; padding: 10px 14px; margin-bottom: 14px; letter-spacing: 0.04em; }
+  .error-banner.visible { display: block; }
+
+  .job-loading {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 8px;
+  }
+
+  .job-card {
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 14px;
+    margin-bottom: 18px;
+    background: rgba(255,255,255,0.04);
+  }
+  .job-card h4 {
+    color: var(--yellow);
+    font-size: 16px;
+    margin-bottom: 6px;
+    font-weight: 800;
+  }
+  .job-meta {
+    color: rgba(255,255,255,0.72);
+    font-size: 12px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .job-summary {
+    color: rgba(255,255,255,0.82);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  /* CV upload */
+  .cv-drop {
+    position: relative; border: 2px dashed var(--yellow); padding: 18px 14px;
+    cursor: pointer; transition: background 0.2s; margin-top: 6px;
+  }
+  .cv-drop:hover, .cv-drop.dragover { background: rgba(245,192,0,0.08); }
+  .cv-drop input[type="file"] {
+    position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    border: none; background: transparent; padding: 0;
+  }
+  .cv-drop-label {
+    display: flex; align-items: center; gap: 10px; pointer-events: none;
+    color: rgba(255,255,255,0.6); font-size: 12px; font-weight: 500;
+  }
+  .cv-drop-label svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--yellow); }
+  .cv-drop.has-file .cv-drop-label { color: var(--white); }
+  .cv-progress { height: 3px; background: rgba(255,255,255,0.12); margin-top: 8px; }
+  .cv-progress-bar { height: 100%; background: var(--yellow); width: 0%; transition: width 0.2s; }
+  .cv-status { font-size: 11px; margin-top: 6px; min-height: 16px; font-style: italic; }
+  .cv-status.ok { color: #7fe87f; }
+  .cv-status.err { color: #ff9999; }
+  #fld-cv.error .cv-drop { border-color: #ff4d4d; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { display: none; width: 14px; height: 14px; border: 2px solid rgba(0,0,0,0.3); border-top-color: var(--black); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  .btn-submit.loading .spinner { display: block; }
+  .btn-submit.loading .btn-label { opacity: 0.7; }
+
+  @media (max-width: 860px) {
+    .hero-inner { grid-template-columns: 1fr; padding: 48px 24px; gap: 44px; }
+    .frow.c3 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) {
+    .frow.c3, .frow.c2 { grid-template-columns: 1fr; }
+    .hero-inner { padding: 36px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+
+    <div class="hero-left">
+      <h1>Now Hiring Moving Professionals in Atlanta, GA</h1>
+      <p class="body-italic">Ready for the most rewarding job you've ever had? Apply today to experience the Furniture Taxi difference! We promise you will love our team, our culture, and the way we invest in our people!</p>
+      <p class="body-bold">Apply online or call us and we will reach out ASAP!</p>
+      <a href="#" class="btn-yellow">Awards &amp; Reviews</a>
+    </div>
+
+    <div class="hero-right">
+      <h2>Apply to Join Our Moving Team!</h2>
+      <a href="tel:4042287404" class="hero-phone">
+        <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        404-228-7404
+      </a>
+
+      <p class="req-note">"*" indicates required fields</p>
+
+      <div class="form-glass" id="appForm">
+        <h3>Employment Application</h3>
+
+        <div class="error-banner" id="errorBanner"></div>
+
+        <!-- STEP 1: job offer -->
+        <div id="jobOfferStep">
+          <div class="frow c1">
+            <div class="fld" id="fld-job-offer">
+              <label>Select Job Offer <span class="req">*</span></label>
+              <select id="jobOfferSelect">
+                <option value="">Loading job offers...</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="selectedJobPreview" class="job-card hidden">
+            <h4 id="jobPreviewTitle"></h4>
+            <div class="job-meta" id="jobPreviewMeta"></div>
+            <div class="job-summary" id="jobPreviewSummary"></div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-secondary" id="continueBtn">Continue →</button>
+            <span class="form-note-small">Choose a published opening to continue.</span>
+          </div>
+
+          <div class="job-loading" id="jobLoadingText">Loading published jobs from Supabase...</div>
+        </div>
+
+        <!-- STEP 2: rest of form -->
+        <div class="form-body hidden" id="formBody">
+
+          <div class="frow c1">
+            <div class="job-card">
+              <h4 id="selectedJobTitleTop"></h4>
+              <div class="job-meta" id="selectedJobMetaTop"></div>
+              <div class="job-summary" id="selectedJobSummaryTop"></div>
+            </div>
+          </div>
+
+          <div class="frow c3">
+            <div class="fld" id="fld-first"><label>First Name <span class="req">*</span></label><input id="firstName" type="text" placeholder="First" /></div>
+            <div class="fld" id="fld-last"><label>Last Name <span class="req">*</span></label><input id="lastName" type="text" placeholder="Last" /></div>
+            <div class="fld" id="fld-phone"><label>Phone <span class="req">*</span></label><input id="phone" type="tel" placeholder="(404) 000-0000" /></div>
+          </div>
+
+          <div class="frow c2">
+            <div class="fld" id="fld-email"><label>E-mail <span class="req">*</span></label><input id="email" type="email" placeholder="you@email.com" /></div>
+            <div class="fld"><label>ZIP Code</label><input id="zip" type="text" placeholder="30341" /></div>
+          </div>
+
+          <div class="frow c1"><div class="fsep">Position &amp; Availability</div></div>
+
+          <div class="frow c2">
+            <div class="fld" id="fld-position">
+              <label>Position Applying For <span class="req">*</span></label>
+              <input id="positionDisplay" type="text" readonly />
+            </div>
+            <div class="fld" id="fld-start"><label>Earliest Start Date <span class="req">*</span></label><input id="startDate" type="date" /></div>
+          </div>
+
+          <div class="frow c2">
+            <div class="fld">
+              <label>Employment Type <span class="req">*</span></label>
+              <div class="opts" id="employmentTypeOptions">
+                <label class="opt"><input type="radio" name="etype" value="Full-Time" /> Full-Time</label>
+                <label class="opt"><input type="radio" name="etype" value="Part-Time" /> Part-Time</label>
+                <label class="opt"><input type="radio" name="etype" value="Weekends" /> Weekends</label>
+              </div>
+            </div>
+            <div class="fld">
+              <label>Moving Experience</label>
+              <select id="experience">
+                <option value="">Select</option>
+                <option>No experience (will train)</option>
+                <option>Less than 1 year</option>
+                <option>1–2 years</option>
+                <option>3–5 years</option>
+                <option>5+ years</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="frow c1"><div class="fsep">Qualifications</div></div>
+
+          <div class="frow c2">
+            <div class="fld">
+              <label>Valid Driver's License? <span class="req">*</span></label>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="dl" value="Yes" /> Yes</label>
+                <label class="opt"><input type="radio" name="dl" value="No" /> No</label>
+              </div>
+            </div>
+            <div class="fld">
+              <label>Pass Background Check? <span class="req">*</span></label>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="bg" value="Yes" /> Yes</label>
+                <label class="opt"><input type="radio" name="bg" value="No" /> No</label>
+                <label class="opt"><input type="radio" name="bg" value="Not Sure" /> Not Sure</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="frow c1">
+            <div class="fld">
+              <label>Tell us about yourself</label>
+              <textarea id="bio" placeholder="Why do you want to join Furniture Taxi? Any relevant experience or skills..."></textarea>
+            </div>
+          </div>
+
+          <div class="frow c1">
+            <div class="fld" id="fld-cv">
+              <label>Upload CV / Resume <span style="color:rgba(255,255,255,0.45);font-weight:400;text-transform:none;letter-spacing:0">(PDF, DOC, DOCX — max 5 MB)</span></label>
+              <div class="cv-drop" id="cvDrop">
+                <input type="file" id="cvFile" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                <div class="cv-drop-label" id="cvDropLabel">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <span id="cvFileName">Click or drag &amp; drop your CV here</span>
+                </div>
+              </div>
+              <div class="cv-progress hidden" id="cvProgress">
+                <div class="cv-progress-bar" id="cvProgressBar"></div>
+              </div>
+              <p class="cv-status" id="cvStatus"></p>
+            </div>
+          </div>
+
+          <div class="frow c1">
+            <div class="fld">
+              <label class="opt" style="font-size:10px;font-weight:600;text-transform:none;letter-spacing:0.02em;color:rgba(255,255,255,0.7);">
+                <input type="checkbox" id="consent" style="margin-right:6px;" />
+                I confirm this information is accurate and consent to a background check as part of the hiring process.
+              </label>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-submit" id="ftSubmitBtn">
+              <span class="spinner"></span>
+              <span class="btn-label">Submit Application &#8594;</span>
+            </button>
+            <span class="form-note-small">We respond within 1&ndash;2 business days.</span>
+          </div>
+        </div>
+
+        <div class="success-panel" id="successPanel">
+          <div class="success-icon">&#10003;</div>
+          <h4>Application Received!</h4>
+          <p>Thanks for applying to Furniture Taxi. Our team will review your application and reach out within <strong style="color:var(--yellow)">1&ndash;2 business days</strong>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var SUPABASE_URL = 'https://mnpovhuuvaexevcbrirh.supabase.co';
+  var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ucG92aHV1dmFleGV2Y2JyaXJoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MDEzMTMyNiwiZXhwIjoyMDc1NzA3MzI2fQ.l2o12pOpW1Fgz2cRmcVT9ZqKIOe5b_tGII6rvaRxzvc';
+  var JOB_OFFERS_TABLE = 'job_offers';
+
+  var JOB_OFFERS_ENDPOINT =
+    SUPABASE_URL +
+    '/rest/v1/' +
+    JOB_OFFERS_TABLE +
+    '?select=id,title,location,employment_type,compensation,summary,is_published,created_at,updated_at' +
+    '&is_published=eq.true' +
+    '&order=created_at.desc';
+
+  var APPLICATIONS_ENDPOINT = SUPABASE_URL + '/rest/v1/job_applications';
+  var CV_BUCKET = 'cvs';
+
+  var selectedJobOffer = null;
+  var jobOffersMap = {};
+  var uploadedCvUrl = null;
+
+  function gel(id) { return document.getElementById(id); }
+
+  function checkedRadio(name) {
+    var el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : null;
+  }
+
+  function setLoading(on) {
+    var btn = gel('ftSubmitBtn');
+    btn.disabled = on;
+    on ? btn.classList.add('loading') : btn.classList.remove('loading');
+  }
+
+  function showError(msg) {
+    var b = gel('errorBanner');
+    b.textContent = msg;
+    b.classList.add('visible');
+    b.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function hideError() {
+    gel('errorBanner').classList.remove('visible');
+  }
+
+  function markField(id, isInvalid) {
+    var el = gel(id);
+    if (!el) return;
+    isInvalid ? el.classList.add('error') : el.classList.remove('error');
+  }
+
+  function escapeHtml(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function buildEmploymentTypeOptions(job) {
+    var wrap = gel('employmentTypeOptions');
+    var type = (job && job.employment_type ? job.employment_type : '').trim();
+
+    if (!type) {
+      wrap.innerHTML = [
+        '<label class="opt"><input type="radio" name="etype" value="Full-Time" /> Full-Time</label>',
+        '<label class="opt"><input type="radio" name="etype" value="Part-Time" /> Part-Time</label>',
+        '<label class="opt"><input type="radio" name="etype" value="Weekends" /> Weekends</label>'
+      ].join('');
+      return;
+    }
+
+    wrap.innerHTML =
+      '<label class="opt"><input type="radio" name="etype" value="' + escapeHtml(type) + '" checked /> ' + escapeHtml(type) + '</label>';
+  }
+
+  function renderJobPreview(job) {
+    if (!job) return;
+
+    var meta = [];
+    if (job.location) meta.push(job.location);
+    if (job.employment_type) meta.push(job.employment_type);
+    if (job.compensation) meta.push(job.compensation);
+
+    gel('jobPreviewTitle').textContent = job.title || 'Untitled position';
+    gel('jobPreviewMeta').textContent = meta.join(' • ');
+    gel('jobPreviewSummary').textContent = job.summary || '';
+    gel('selectedJobPreview').classList.remove('hidden');
+
+    gel('selectedJobTitleTop').textContent = job.title || 'Untitled position';
+    gel('selectedJobMetaTop').textContent = meta.join(' • ');
+    gel('selectedJobSummaryTop').textContent = job.summary || '';
+    gel('positionDisplay').value = job.title || '';
+
+    buildEmploymentTypeOptions(job);
+  }
+
+  function loadJobOffers() {
+    fetch(JOB_OFFERS_ENDPOINT, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': ANON_KEY,
+        'Authorization': 'Bearer ' + ANON_KEY
+      }
+    })
+    .then(function (res) {
+      if (!res.ok) {
+        throw new Error('Could not load job offers. HTTP ' + res.status);
+      }
+      return res.json();
+    })
+    .then(function (rows) {
+      var select = gel('jobOfferSelect');
+      gel('jobLoadingText').textContent = '';
+
+      if (!Array.isArray(rows) || rows.length === 0) {
+        select.innerHTML = '<option value="">No published job offers available</option>';
+        return;
+      }
+
+      select.innerHTML = '<option value="">Select a job offer</option>';
+
+      rows.forEach(function (row) {
+        jobOffersMap[row.id] = row;
+
+        var option = document.createElement('option');
+        option.value = row.id;
+        option.textContent = row.title + (row.location ? ' — ' + row.location : '');
+        select.appendChild(option);
+      });
+    })
+    .catch(function (err) {
+      console.error(err);
+      gel('jobOfferSelect').innerHTML = '<option value="">Unable to load job offers</option>';
+      gel('jobLoadingText').textContent = '';
+      showError('Unable to load published job offers from Supabase. Please try again later.');
+    });
+  }
+
+  function continueAfterJobSelection() {
+    hideError();
+
+    var jobId = gel('jobOfferSelect').value;
+    if (!jobId) {
+      markField('fld-job-offer', true);
+      showError('Please select a job offer before continuing.');
+      return;
+    }
+
+    markField('fld-job-offer', false);
+    selectedJobOffer = jobOffersMap[jobId] || null;
+
+    if (!selectedJobOffer) {
+      showError('The selected job offer could not be found. Please refresh and try again.');
+      return;
+    }
+
+    renderJobPreview(selectedJobOffer);
+    gel('jobOfferStep').classList.add('hidden');
+    gel('formBody').classList.remove('hidden');
+  }
+
+  function validate() {
+    var ok = true;
+
+    if (!selectedJobOffer || !selectedJobOffer.id) {
+      showError('Please select a job offer first.');
+      return false;
+    }
+
+    var textFields = [
+      { wrap: 'fld-first', input: 'firstName' },
+      { wrap: 'fld-last', input: 'lastName' },
+      { wrap: 'fld-phone', input: 'phone' },
+      { wrap: 'fld-email', input: 'email' },
+      { wrap: 'fld-position', input: 'positionDisplay' },
+      { wrap: 'fld-start', input: 'startDate' }
+    ];
+
+    textFields.forEach(function (f) {
+      var value = gel(f.input).value;
+      var empty = !String(value || '').trim();
+      markField(f.wrap, empty);
+      if (empty) ok = false;
+    });
+
+    if (!ok) {
+      showError('Please fill in all required fields.');
+      return false;
+    }
+
+    if (!checkedRadio('etype')) {
+      showError('Please select an Employment Type.');
+      return false;
+    }
+
+    if (!checkedRadio('dl')) {
+      showError('Please answer the Driver\'s License question.');
+      return false;
+    }
+
+    if (!checkedRadio('bg')) {
+      showError('Please answer the Background Check question.');
+      return false;
+    }
+
+    if (!gel('consent').checked) {
+      showError('Please check the consent checkbox before submitting.');
+      return false;
+    }
+
+    var email = gel('email').value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      markField('fld-email', true);
+      showError('Please enter a valid email address.');
+      return false;
+    }
+
+    return true;
+  }
+
+  function uploadCv(file, onProgress) {
+    return new Promise(function (resolve, reject) {
+      var ext = file.name.split('.').pop();
+      var path = 'applications/' + Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+      var endpoint = SUPABASE_URL + '/storage/v1/object/' + CV_BUCKET + '/' + path;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', endpoint);
+      xhr.setRequestHeader('apikey', ANON_KEY);
+      xhr.setRequestHeader('Authorization', 'Bearer ' + ANON_KEY);
+      xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
+      xhr.setRequestHeader('x-upsert', 'true');
+
+      xhr.upload.onprogress = function (e) {
+        if (e.lengthComputable) onProgress(Math.round((e.loaded / e.total) * 100));
+      };
+
+      xhr.onload = function () {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          var publicUrl = SUPABASE_URL + '/storage/v1/object/public/' + CV_BUCKET + '/' + path;
+          resolve(publicUrl);
+        } else {
+          try {
+            var err = JSON.parse(xhr.responseText);
+            reject(new Error(err.message || err.error || ('HTTP ' + xhr.status)));
+          } catch (e) {
+            reject(new Error('HTTP ' + xhr.status));
+          }
+        }
+      };
+
+      xhr.onerror = function () { reject(new Error('Network error during upload.')); };
+      xhr.send(file);
+    });
+  }
+
+  function submitApplication() {
+    hideError();
+    if (!validate()) return;
+
+    setLoading(true);
+
+    var cvFile = gel('cvFile').files[0];
+
+    if (cvFile) {
+      var progress = gel('cvProgress');
+      var bar = gel('cvProgressBar');
+      var status = gel('cvStatus');
+      progress.classList.remove('hidden');
+      status.className = 'cv-status';
+      status.textContent = 'Uploading CV…';
+
+      uploadCv(cvFile, function (pct) {
+        bar.style.width = pct + '%';
+      })
+      .then(function (url) {
+        uploadedCvUrl = url;
+        bar.style.width = '100%';
+        status.className = 'cv-status ok';
+        status.textContent = 'CV uploaded successfully.';
+        doSubmit();
+      })
+      .catch(function (err) {
+        setLoading(false);
+        progress.classList.add('hidden');
+        status.className = 'cv-status err';
+        status.textContent = 'Upload failed: ' + err.message;
+        showError('CV upload failed: ' + err.message + '. Please try again.');
+      });
+      return;
+    }
+
+    doSubmit();
+  }
+
+  function doSubmit() {
+
+    var payload = {
+      job_offer_id: selectedJobOffer.id,
+      position: selectedJobOffer.title || null,
+      first_name: gel('firstName').value.trim(),
+      last_name: gel('lastName').value.trim(),
+      phone: gel('phone').value.trim(),
+      email: gel('email').value.trim(),
+      zip_code: gel('zip').value.trim() || null,
+      start_date: gel('startDate').value,
+      employment_type: checkedRadio('etype'),
+      experience: gel('experience').value || null,
+      drivers_license: checkedRadio('dl'),
+      background_check: checkedRadio('bg'),
+      bio: gel('bio').value.trim() || null,
+      cv_url: uploadedCvUrl || null,
+      consent: true,
+      submitted_at: new Date().toISOString()
+    };
+
+    fetch(APPLICATIONS_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': ANON_KEY,
+        'Authorization': 'Bearer ' + ANON_KEY,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(function (res) {
+      if (res.ok) {
+        setLoading(false);
+        gel('formBody').classList.add('hidden');
+        gel('successPanel').classList.add('visible');
+      } else {
+        res.json().then(function (errBody) {
+          setLoading(false);
+          var msg = (errBody && (errBody.message || errBody.hint || errBody.details)) || ('HTTP ' + res.status);
+          console.error('Supabase error:', errBody);
+          showError('Submission failed: ' + msg + '. Please try again or call us at 404-228-7404.');
+        }).catch(function () {
+          setLoading(false);
+          showError('Submission failed (HTTP ' + res.status + '). Please try again or call us at 404-228-7404.');
+        });
+      }
+    })
+    .catch(function (networkErr) {
+      setLoading(false);
+      console.error('Network error:', networkErr);
+      showError('Network error. Please check your connection and try again.');
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var continueBtn = gel('continueBtn');
+    var submitBtn = gel('ftSubmitBtn');
+    var jobSelect = gel('jobOfferSelect');
+
+    if (continueBtn) continueBtn.addEventListener('click', continueAfterJobSelection);
+    if (submitBtn) submitBtn.addEventListener('click', submitApplication);
+
+    // CV upload: file name preview + drag-and-drop highlight
+    var cvFile = gel('cvFile');
+    var cvDrop = gel('cvDrop');
+    var cvFileName = gel('cvFileName');
+
+    if (cvFile) {
+      cvFile.addEventListener('change', function () {
+        var f = cvFile.files[0];
+        if (f) {
+          cvFileName.textContent = f.name;
+          cvDrop.classList.add('has-file');
+          gel('cvStatus').className = 'cv-status';
+          gel('cvStatus').textContent = '';
+          gel('cvProgress').classList.add('hidden');
+          gel('cvProgressBar').style.width = '0%';
+          uploadedCvUrl = null;
+        }
+      });
+    }
+
+    if (cvDrop) {
+      cvDrop.addEventListener('dragover', function (e) { e.preventDefault(); cvDrop.classList.add('dragover'); });
+      cvDrop.addEventListener('dragleave', function () { cvDrop.classList.remove('dragover'); });
+      cvDrop.addEventListener('drop', function (e) {
+        e.preventDefault();
+        cvDrop.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+          cvFile.files = e.dataTransfer.files;
+          cvFile.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+
+    if (jobSelect) {
+      jobSelect.addEventListener('change', function () {
+        hideError();
+
+        var jobId = jobSelect.value;
+        markField('fld-job-offer', !jobId);
+
+        if (!jobId || !jobOffersMap[jobId]) {
+          gel('selectedJobPreview').classList.add('hidden');
+          return;
+        }
+
+        renderJobPreview(jobOffersMap[jobId]);
+      });
+    }
+
+    loadJobOffers();
+  });
+}());
+</script>
+
+</body>
+</html>
