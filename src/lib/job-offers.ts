@@ -5,9 +5,10 @@ import type { JobOffer, NewJobOfferInput } from '@/app/types'
 type JobOfferRow = {
   id: string
   title: string
+  category: string | null
+  description: string | null
   location: string
   employment_type: string
-  compensation: string | null
   summary: string
   created_at: string
 }
@@ -28,9 +29,10 @@ function toJobOffer(row: JobOfferRow): JobOffer {
   return {
     id: row.id,
     title: row.title,
+    category: row.category ?? '',
+    description: row.description ?? '',
     location: row.location,
     employmentType: row.employment_type,
-    compensation: row.compensation ?? '',
     summary: row.summary,
     postedAt: row.created_at,
   }
@@ -40,7 +42,7 @@ export async function getJobOffers() {
   const { data, error } = await supabaseAdmin
     .from('job_offers')
     .select(
-      'id, title, location, employment_type, compensation, summary, created_at'
+      'id, title, category, description, location, employment_type, summary, created_at'
     )
     .eq('is_published', true)
     .order('created_at', { ascending: false })
@@ -61,13 +63,14 @@ export async function createJobOffer(input: NewJobOfferInput) {
     .from('job_offers')
     .insert({
       title: input.title,
+      category: input.category || null,
+      description: input.description || null,
       location: input.location,
       employment_type: input.employmentType,
-      compensation: input.compensation || null,
       summary: input.summary,
     })
     .select(
-      'id, title, location, employment_type, compensation, summary, created_at'
+      'id, title, category, description, location, employment_type, summary, created_at'
     )
     .single()
 
@@ -82,4 +85,34 @@ export async function createJobOffer(input: NewJobOfferInput) {
   }
 
   return toJobOffer(data)
+}
+
+export async function updateJobOffer(id: string, input: NewJobOfferInput) {
+  const { data, error } = await supabaseAdmin
+    .from('job_offers')
+    .update({
+      title: input.title,
+      category: input.category || null,
+      description: input.description || null,
+      location: input.location,
+      employment_type: input.employmentType,
+      summary: input.summary,
+    })
+    .eq('id', id)
+    .select(
+      'id, title, category, description, location, employment_type, summary, created_at'
+    )
+    .single()
+
+  if (error) throw new Error(error.message)
+  return toJobOffer(data)
+}
+
+export async function deleteJobOffer(id: string) {
+  const { error } = await supabaseAdmin
+    .from('job_offers')
+    .delete()
+    .eq('id', id)
+
+  if (error) throw new Error(error.message)
 }

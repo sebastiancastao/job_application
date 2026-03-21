@@ -370,7 +370,7 @@
     SUPABASE_URL +
     '/rest/v1/' +
     JOB_OFFERS_TABLE +
-    '?select=id,title,location,employment_type,compensation,summary,is_published,created_at,updated_at' +
+    '?select=id,title,location,employment_type,summary,is_published,created_at,updated_at' +
     '&is_published=eq.true' +
     '&order=created_at.desc';
 
@@ -443,7 +443,6 @@
     var meta = [];
     if (job.location) meta.push(job.location);
     if (job.employment_type) meta.push(job.employment_type);
-    if (job.compensation) meta.push(job.compensation);
 
     gel('jobPreviewTitle').textContent = job.title || 'Untitled position';
     gel('jobPreviewMeta').textContent = meta.join(' • ');

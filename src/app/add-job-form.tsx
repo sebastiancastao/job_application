@@ -42,6 +42,7 @@ export function AddJobForm() {
       <form ref={formRef} action={formAction} className="grid gap-4">
         <div className="grid gap-4">
           <FormField label="Job title" name="title" required />
+          <FormField label="Category" name="category" required placeholder="e.g. Moving, Driving, Warehouse" />
           <FormField label="Location" name="location" required />
           <SelectField
             label="Employment type"
@@ -49,17 +50,27 @@ export function AddJobForm() {
             options={employmentTypes}
             required
           />
-          <FormField label="Compensation" name="compensation" />
         </div>
 
         <label className="grid gap-2 text-sm font-medium text-zinc-700">
-          Summary
+          Description <span className="font-normal text-zinc-400">(full job description)</span>
           <textarea
-            name="summary"
-            rows={6}
+            name="description"
+            rows={10}
             required
             className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition focus:border-zinc-400 focus:bg-white"
-            placeholder="Describe the role, responsibilities, or requirements."
+            placeholder="Write the full job description here — responsibilities, requirements, benefits, etc."
+          />
+        </label>
+
+        <label className="grid gap-2 text-sm font-medium text-zinc-700">
+          Summary <span className="font-normal text-zinc-400">(short teaser shown on listings)</span>
+          <textarea
+            name="summary"
+            rows={3}
+            required
+            className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition focus:border-zinc-400 focus:bg-white"
+            placeholder="One or two sentences describing the role."
           />
         </label>
 
@@ -92,11 +103,13 @@ function FormField({
   name,
   required,
   type = 'text',
+  placeholder,
 }: {
   label: string
   name: string
   required?: boolean
   type?: React.HTMLInputTypeAttribute
+  placeholder?: string
 }) {
   return (
     <label className="grid gap-2 text-sm font-medium text-zinc-700">
@@ -105,6 +118,7 @@ function FormField({
         name={name}
         type={type}
         required={required}
+        placeholder={placeholder}
         className="rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 outline-none transition focus:border-zinc-400 focus:bg-white"
       />
     </label>

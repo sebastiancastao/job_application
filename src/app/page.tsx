@@ -1,4 +1,5 @@
 import { AddJobForm } from './add-job-form'
+import { JobOfferCard } from './job-offer-card'
 import type { JobApplication, JobOffer } from './types'
 
 import { getJobOffers } from '@/lib/job-offers'
@@ -67,39 +68,7 @@ export default async function Home() {
             ) : (
               <div className="grid gap-6 lg:grid-cols-2">
                 {jobOffers.map((offer) => (
-                  <article
-                    key={offer.id}
-                    className="flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-zinc-200"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 className="text-xl font-semibold text-zinc-900">
-                          {offer.title}
-                        </h3>
-                        <p className="mt-1 text-sm text-zinc-500">{offer.location}</p>
-                      </div>
-                      <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
-                        {offer.employmentType}
-                      </span>
-                    </div>
-
-                    {offer.compensation ? (
-                      <p className="text-sm font-medium text-zinc-700">
-                        Compensation: {offer.compensation}
-                      </p>
-                    ) : null}
-
-                    <p className="text-sm leading-6 text-zinc-600">{offer.summary}</p>
-
-                    <p className="mt-auto text-xs text-zinc-400">
-                      Posted{' '}
-                      {new Date(offer.postedAt).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      })}
-                    </p>
-                  </article>
+                  <JobOfferCard key={offer.id} offer={offer} />
                 ))}
               </div>
             )}

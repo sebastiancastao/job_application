@@ -21,9 +21,10 @@ export type JobApplication = {
 export type JobOffer = {
   id: string
   title: string
+  category: string
+  description: string
   location: string
   employmentType: string
-  compensation: string
   summary: string
   postedAt: string
 }
