@@ -144,6 +144,35 @@
     line-height: 1.7;
   }
 
+  /* Job detail panel */
+  .job-detail-box { border: 1px solid rgba(255,255,255,0.15); padding: 20px; background: rgba(255,255,255,0.04); }
+  .back-btn {
+    background: none; border: none; color: rgba(255,255,255,0.55); font-family: 'Montserrat',sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+    padding: 0 0 14px 0; display: block; transition: color 0.15s;
+  }
+  .back-btn:hover { color: var(--yellow); }
+  .job-detail-category { font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: var(--yellow); margin-bottom: 6px; }
+  .job-detail-title { font-size: clamp(18px,2.2vw,26px); font-weight: 900; color: var(--white); margin-bottom: 8px; }
+  .job-detail-desc { color: rgba(255,255,255,0.82); font-size: 13px; line-height: 1.85; white-space: pre-wrap; }
+
+  /* Selectable job offer cards */
+  .job-offer-cards { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .job-offer-item {
+    border: 2px solid rgba(255,255,255,0.15); padding: 14px 16px; cursor: pointer;
+    background: rgba(255,255,255,0.04); transition: border-color 0.18s, background 0.18s;
+  }
+  .job-offer-item:hover { border-color: var(--yellow); background: rgba(245,192,0,0.07); }
+  .job-offer-item.selected { border-color: var(--yellow); background: rgba(245,192,0,0.12); }
+  .job-offer-item h4 { color: var(--yellow); font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+  .job-offer-item .job-meta { color: rgba(255,255,255,0.65); font-size: 11px; margin-bottom: 6px; }
+  .job-offer-item .job-summary { color: rgba(255,255,255,0.8); font-size: 12px; line-height: 1.6; }
+  .job-offer-item .selected-badge {
+    display: none; float: right; background: var(--yellow); color: var(--black);
+    font-size: 10px; font-weight: 800; letter-spacing: 0.08em; padding: 2px 8px; text-transform: uppercase;
+  }
+  .job-offer-item.selected .selected-badge { display: inline-block; }
+
   /* CV upload */
   .cv-drop {
     position: relative; border: 2px dashed var(--yellow); padding: 18px 14px;
@@ -209,29 +238,29 @@
 
         <div class="error-banner" id="errorBanner"></div>
 
-        <!-- STEP 1: job offer -->
+        <!-- STEP 1: job offer cards -->
         <div id="jobOfferStep">
-          <div class="frow c1">
-            <div class="fld" id="fld-job-offer">
-              <label>Select Job Offer <span class="req">*</span></label>
-              <select id="jobOfferSelect">
-                <option value="">Loading job offers...</option>
-              </select>
+          <p style="font-size:11px;color:rgba(255,255,255,0.6);margin-bottom:14px;">
+            Click a position below to apply <span style="color:var(--yellow)">*</span>
+          </p>
+          <div class="job-loading" id="jobLoadingText">Loading available positions…</div>
+          <div id="jobCardsList"></div>
+
+          <!-- Detail panel shown after selecting a card -->
+          <div id="jobDetailPanel" class="hidden">
+            <div class="job-detail-box">
+              <button type="button" id="backToListBtn" class="back-btn">&#8592; Back to positions</button>
+              <div id="jobDetailCategory" class="job-detail-category"></div>
+              <h3 id="jobDetailTitle" class="job-detail-title"></h3>
+              <div id="jobDetailMeta" class="job-meta" style="margin-bottom:14px;"></div>
+              <div id="jobDetailDescription" class="job-detail-desc"></div>
+            </div>
+            <div class="form-actions" style="margin-top:18px;">
+              <button type="button" id="applyNowBtn" class="btn-submit">
+                <span class="btn-label">Apply Now &#8594;</span>
+              </button>
             </div>
           </div>
-
-          <div id="selectedJobPreview" class="job-card hidden">
-            <h4 id="jobPreviewTitle"></h4>
-            <div class="job-meta" id="jobPreviewMeta"></div>
-            <div class="job-summary" id="jobPreviewSummary"></div>
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-secondary" id="continueBtn">Continue →</button>
-            <span class="form-note-small">Choose a published opening to continue.</span>
-          </div>
-
-          <div class="job-loading" id="jobLoadingText">Loading published jobs from Supabase...</div>
         </div>
 
         <!-- STEP 2: rest of form -->
@@ -370,8 +399,7 @@
     SUPABASE_URL +
     '/rest/v1/' +
     JOB_OFFERS_TABLE +
-    '?select=id,title,location,employment_type,summary,is_published,created_at,updated_at' +
-    '&is_published=eq.true' +
+    '?select=id,title,category,description,location,employment_type,summary,created_at' +
     '&order=created_at.desc';
 
   var APPLICATIONS_ENDPOINT = SUPABASE_URL + '/rest/v1/job_applications';
@@ -444,13 +472,8 @@
     if (job.location) meta.push(job.location);
     if (job.employment_type) meta.push(job.employment_type);
 
-    gel('jobPreviewTitle').textContent = job.title || 'Untitled position';
-    gel('jobPreviewMeta').textContent = meta.join(' • ');
-    gel('jobPreviewSummary').textContent = job.summary || '';
-    gel('selectedJobPreview').classList.remove('hidden');
-
     gel('selectedJobTitleTop').textContent = job.title || 'Untitled position';
-    gel('selectedJobMetaTop').textContent = meta.join(' • ');
+    gel('selectedJobMetaTop').textContent = meta.join(' \u2022 ');
     gel('selectedJobSummaryTop').textContent = job.summary || '';
     gel('positionDisplay').value = job.title || '';
 
@@ -459,68 +482,71 @@
 
   function loadJobOffers() {
     fetch(JOB_OFFERS_ENDPOINT, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'apikey': ANON_KEY,
-        'Authorization': 'Bearer ' + ANON_KEY
-      }
+      headers: { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + ANON_KEY }
     })
     .then(function (res) {
-      if (!res.ok) {
-        throw new Error('Could not load job offers. HTTP ' + res.status);
-      }
+      if (!res.ok) throw new Error('HTTP ' + res.status);
       return res.json();
     })
     .then(function (rows) {
-      var select = gel('jobOfferSelect');
       gel('jobLoadingText').textContent = '';
+      var list = gel('jobCardsList');
 
       if (!Array.isArray(rows) || rows.length === 0) {
-        select.innerHTML = '<option value="">No published job offers available</option>';
+        list.innerHTML = '<p style="color:rgba(255,255,255,0.5);font-size:13px;">No positions available at the moment.</p>';
         return;
       }
 
-      select.innerHTML = '<option value="">Select a job offer</option>';
+      list.innerHTML = '';
+      list.className = 'job-offer-cards';
 
       rows.forEach(function (row) {
         jobOffersMap[row.id] = row;
 
-        var option = document.createElement('option');
-        option.value = row.id;
-        option.textContent = row.title + (row.location ? ' — ' + row.location : '');
-        select.appendChild(option);
+        var meta = [];
+        if (row.location) meta.push(row.location);
+        if (row.employment_type) meta.push(row.employment_type);
+
+        var card = document.createElement('div');
+        card.className = 'job-offer-item';
+        card.setAttribute('data-id', row.id);
+        card.innerHTML =
+          '<span class="selected-badge">Selected</span>' +
+          '<h4>' + escapeHtml(row.title) + '</h4>' +
+          (meta.length ? '<div class="job-meta">' + escapeHtml(meta.join(' \u2022 ')) + '</div>' : '') +
+          (row.summary ? '<div class="job-summary">' + escapeHtml(row.summary) + '</div>' : '');
+
+        card.addEventListener('click', function () {
+          var all = list.querySelectorAll('.job-offer-item');
+          for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+          card.classList.add('selected');
+          selectedJobOffer = jobOffersMap[row.id];
+          hideError();
+          showJobDetail(selectedJobOffer);
+        });
+
+        list.appendChild(card);
       });
     })
     .catch(function (err) {
       console.error(err);
-      gel('jobOfferSelect').innerHTML = '<option value="">Unable to load job offers</option>';
       gel('jobLoadingText').textContent = '';
-      showError('Unable to load published job offers from Supabase. Please try again later.');
+      gel('jobCardsList').innerHTML = '<p style="color:#ffaaaa;font-size:12px;">Unable to load positions. Please try again later.</p>';
     });
   }
 
-  function continueAfterJobSelection() {
-    hideError();
+  function showJobDetail(job) {
+    var meta = [];
+    if (job.location) meta.push(job.location);
+    if (job.employment_type) meta.push(job.employment_type);
 
-    var jobId = gel('jobOfferSelect').value;
-    if (!jobId) {
-      markField('fld-job-offer', true);
-      showError('Please select a job offer before continuing.');
-      return;
-    }
+    gel('jobDetailCategory').textContent = job.category || '';
+    gel('jobDetailTitle').textContent = job.title || '';
+    gel('jobDetailMeta').textContent = meta.join(' \u2022 ');
+    gel('jobDetailDescription').textContent = job.description || job.summary || '';
 
-    markField('fld-job-offer', false);
-    selectedJobOffer = jobOffersMap[jobId] || null;
-
-    if (!selectedJobOffer) {
-      showError('The selected job offer could not be found. Please refresh and try again.');
-      return;
-    }
-
-    renderJobPreview(selectedJobOffer);
-    gel('jobOfferStep').classList.add('hidden');
-    gel('formBody').classList.remove('hidden');
+    gel('jobCardsList').classList.add('hidden');
+    gel('jobDetailPanel').classList.remove('hidden');
   }
 
   function validate() {
@@ -713,12 +739,25 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    var continueBtn = gel('continueBtn');
     var submitBtn = gel('ftSubmitBtn');
-    var jobSelect = gel('jobOfferSelect');
-
-    if (continueBtn) continueBtn.addEventListener('click', continueAfterJobSelection);
     if (submitBtn) submitBtn.addEventListener('click', submitApplication);
+
+    var applyNowBtn = gel('applyNowBtn');
+    if (applyNowBtn) applyNowBtn.addEventListener('click', function () {
+      renderJobPreview(selectedJobOffer);
+      gel('jobOfferStep').classList.add('hidden');
+      gel('formBody').classList.remove('hidden');
+    });
+
+    var backBtn = gel('backToListBtn');
+    if (backBtn) backBtn.addEventListener('click', function () {
+      gel('jobDetailPanel').classList.add('hidden');
+      gel('jobCardsList').classList.remove('hidden');
+      // deselect cards
+      var all = gel('jobCardsList').querySelectorAll('.job-offer-item');
+      for (var i = 0; i < all.length; i++) all[i].classList.remove('selected');
+      selectedJobOffer = null;
+    });
 
     // CV upload: file name preview + drag-and-drop highlight
     var cvFile = gel('cvFile');
@@ -750,22 +789,6 @@
           cvFile.files = e.dataTransfer.files;
           cvFile.dispatchEvent(new Event('change'));
         }
-      });
-    }
-
-    if (jobSelect) {
-      jobSelect.addEventListener('change', function () {
-        hideError();
-
-        var jobId = jobSelect.value;
-        markField('fld-job-offer', !jobId);
-
-        if (!jobId || !jobOffersMap[jobId]) {
-          gel('selectedJobPreview').classList.add('hidden');
-          return;
-        }
-
-        renderJobPreview(jobOffersMap[jobId]);
       });
     }
 
