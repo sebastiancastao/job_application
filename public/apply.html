@@ -266,6 +266,8 @@
         <!-- STEP 2: rest of form -->
         <div class="form-body hidden" id="formBody">
 
+          <button type="button" id="backToDetailBtn" class="back-btn" style="margin-bottom:4px;">&#8592; Back to job details</button>
+
           <div class="frow c1">
             <div class="job-card">
               <h4 id="selectedJobTitleTop"></h4>
@@ -747,6 +749,14 @@
       renderJobPreview(selectedJobOffer);
       gel('jobOfferStep').classList.add('hidden');
       gel('formBody').classList.remove('hidden');
+    });
+
+    var backToDetailBtn = gel('backToDetailBtn');
+    if (backToDetailBtn) backToDetailBtn.addEventListener('click', function () {
+      gel('formBody').classList.add('hidden');
+      gel('jobOfferStep').classList.remove('hidden');
+      gel('jobCardsList').classList.add('hidden');
+      gel('jobDetailPanel').classList.remove('hidden');
     });
 
     var backBtn = gel('backToListBtn');
